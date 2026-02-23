@@ -1,0 +1,5 @@
+__pycache__/
+Uploaded_Files/
+*.pth
+.DS_Store
+*.pyc

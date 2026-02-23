@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analysis Result | DeepScan</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+    <div class="app-container">
+        <div class="glass-card">
+            <h1>Detection Complete</h1>
+            <p class="subtitle">The video has been analyzed successfully.</p>
+
+            <div class="result-display">
+                <p class="result-label">The system detected this as:</p>
+                <div class="result-value">{{ result }}</div>
+            </div>
+
+            <div style="margin-top: 3rem;">
+                <a href="/" class="btn-primary">Scan Another Video</a>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

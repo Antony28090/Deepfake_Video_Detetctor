@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DeepScan | AI Video Analysis</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+    <div class="app-container">
+
+        <!-- Upload Card -->
+        <div class="glass-card" id="upload-card">
+            <h1>DeepScan AI</h1>
+            <p class="subtitle">Securely analyze video integrity with our advanced deepfake detection engine.</p>
+
+            <form id="uploadForm" method="POST" enctype="multipart/form-data">
+                <div class="upload-zone" id="drop-zone">
+                    <input type="file" name="video" id="file-input" accept=".mp4,.avi,.mov" required>
+                    <div class="upload-content">
+                        <div class="upload-icon">
+                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path
+                                    d="M7 16V19C7 20.1046 7.89543 21 9 21H15C16.1046 21 17 20.1046 17 19V16M12 15V3M12 3L7 8M12 3L17 8"
+                                    stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" />
+                            </svg>
+                        </div>
+                        <p class="upload-text"><strong>Click to upload</strong> or drag video here</p>
+                        <p class="upload-text" style="font-size: 0.8rem; margin-top: 0.5rem; opacity: 0.7;">MP4, AVI,
+                            MOV supported</p>
+                    </div>
+                </div>
+
+                <div class="file-info" id="file-info">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
+                        class="icon-small">
+                        <path d="M15 10L20 6V18L15 14V10Z" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                            stroke-linejoin="round" />
+                        <path
+                            d="M4 8H12C13.1046 8 14 8.89543 14 10V14C14 15.1046 13.1046 16 12 16H4C2.89543 16 2 15.1046 2 14V10C2 8.89543 2.89543 8 4 8Z"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                    <span id="filename-display">video_file.mp4</span>
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
+                        class="icon-small success">
+                        <path d="M20 6L9 17L4 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                            stroke-linejoin="round" />
+                    </svg>
+                </div>
+
+                <button type="submit" class="btn-primary" id="submit-btn" disabled>
+                    Start Analysis
+                </button>
+            </form>
+        </div>
+
+        <!-- Loading State -->
+        <div class="glass-card loader-container" id="loader-card">
+            <div class="spinner"></div>
+            <h2 class="loading-text">Analyzing Content...</h2>
+            <p class="subtitle" style="margin: 1rem 0 0;">Please wait while our AI scans frame by frame.</p>
+        </div>
+
+    </div>
+
+    <script>
+        const dropZone = document.getElementById('drop-zone');
+        const fileInput = document.getElementById('file-input');
+        const fileInfo = document.getElementById('file-info');
+        const filenameDisplay = document.getElementById('filename-display');
+        const submitBtn = document.getElementById('submit-btn');
+        const uploadForm = document.getElementById('uploadForm');
+        const uploadCard = document.getElementById('upload-card');
+        const loaderCard = document.getElementById('loader-card');
+
+        // Prevent default drag behaviors
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            dropZone.addEventListener(eventName, preventDefaults, false);
+            document.body.addEventListener(eventName, preventDefaults, false);
+        });
+
+        function preventDefaults(e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+
+        // Highlight drop zone
+        ['dragenter', 'dragover'].forEach(eventName => {
+            dropZone.addEventListener(eventName, highlight, false);
+        });
+
+        ['dragleave', 'drop'].forEach(eventName => {
+            dropZone.addEventListener(eventName, unhighlight, false);
+        });
+
+        function highlight(e) {
+            dropZone.classList.add('dragover');
+        }
+
+        function unhighlight(e) {
+            dropZone.classList.remove('dragover');
+        }
+
+        // Handle File Selection
+        fileInput.addEventListener('change', handleFiles);
+        dropZone.addEventListener('drop', handleDrop);
+
+        function handleDrop(e) {
+            const dt = e.dataTransfer;
+            const files = dt.files;
+            fileInput.files = files;
+            handleFiles();
+        }
+
+        function handleFiles() {
+            if (fileInput.files.length > 0) {
+                const file = fileInput.files[0];
+                filenameDisplay.textContent = file.name; // Truncate if needed
+
+                fileInfo.style.display = 'flex';
+                // Reset animation
+                fileInfo.style.animation = 'none';
+                fileInfo.offsetHeight; /* trigger reflow */
+                fileInfo.style.animation = 'fadeInUp 0.3s ease forwards';
+
+                submitBtn.disabled = false;
+            }
+        }
+
+        // Form Submit Animation
+        uploadForm.addEventListener('submit', (e) => {
+            // e.preventDefault(); // Uncomment for testing UI without backend
+            uploadCard.style.display = 'none';
+            loaderCard.style.display = 'block';
+        });
+
+        // Add Keyframe animation for JS interactions
+        const styleSheet = document.createElement("style");
+        styleSheet.innerText = `
+            @keyframes fadeInUp {
+                from { opacity: 0; transform: translateY(10px); }
+                to { opacity: 1; transform: translateY(0); }
+            }
+        `;
+        document.head.appendChild(styleSheet);
+    </script>
+</body>
+
+</html>

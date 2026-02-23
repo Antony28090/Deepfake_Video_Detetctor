@@ -1,0 +1,4 @@
+File: SIR_-_-_Tamilaga_Vettri_Kazhagam_1080p_h264.mp4
+Processed Frames: 136
+Avg: 0.4828 | P90: 0.7454 | Max: 0.8897
+--------------------------------------------------
